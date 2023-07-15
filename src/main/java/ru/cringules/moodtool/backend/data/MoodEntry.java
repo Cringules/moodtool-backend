@@ -21,6 +21,9 @@ public class MoodEntry {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @ManyToOne
+    private User user;
+
     @NotNull
     @Range(min = -5, max = 5)
     private Integer angryAfraid;

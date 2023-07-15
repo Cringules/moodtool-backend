@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.cringules.moodtool.backend.data.MoodEntry;
 import ru.cringules.moodtool.backend.data.MoodEntryTag;
+import ru.cringules.moodtool.backend.data.User;
 import ru.cringules.moodtool.backend.data.repositories.MoodEntryRepository;
 import ru.cringules.moodtool.backend.domain.dto.MoodEntryDto;
 
@@ -15,8 +16,9 @@ import java.util.List;
 public class MoodEntryService {
     private final MoodEntryRepository moodEntryRepository;
 
-    public void createMoodEntry(MoodEntryDto dto) {
+    public void createMoodEntry(MoodEntryDto dto, User user) {
         MoodEntry moodEntry = new MoodEntry();
+        moodEntry.setUser(user);
         moodEntry.setAngryAfraid(dto.getAngryAfraid());
         moodEntry.setCheerfulDepressed(dto.getCheerfulDepressed());
         moodEntry.setWillfulYielding(dto.getWillfulYielding());
@@ -35,8 +37,8 @@ public class MoodEntryService {
         moodEntryRepository.save(moodEntry);
     }
 
-    public List<MoodEntryDto> getMoodEntries() {
-        return moodEntryRepository.findAll()
+    public List<MoodEntryDto> getMoodEntries(User user) {
+        return moodEntryRepository.findAllByUser(user)
                 .stream().map(moodEntry -> {
                     MoodEntryDto dto = new MoodEntryDto();
                     dto.setId(moodEntry.getId());
