@@ -7,12 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.cringules.moodtool.backend.data.User;
 import ru.cringules.moodtool.backend.data.repositories.UserRepository;
+import ru.cringules.moodtool.backend.domain.dto.AuthCheckResponse;
 import ru.cringules.moodtool.backend.domain.dto.AuthenticationRequestDto;
 import ru.cringules.moodtool.backend.domain.dto.AuthenticationResponseDto;
 import ru.cringules.moodtool.backend.services.TokenService;
@@ -57,5 +55,13 @@ public class AuthController {
         String token = tokenService.getToken(authentication.getName());
 
         return ResponseEntity.ok(new AuthenticationResponseDto(token));
+    }
+
+    @GetMapping("check")
+    public ResponseEntity<AuthCheckResponse> check() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(new AuthCheckResponse(user.getUsername()));
     }
 }
