@@ -11,6 +11,8 @@ import ru.cringules.moodtool.backend.data.User;
 import ru.cringules.moodtool.backend.domain.dto.MoodConditions;
 import ru.cringules.moodtool.backend.domain.dto.MoodDto;
 import ru.cringules.moodtool.backend.domain.dto.MoodEntryDto;
+import ru.cringules.moodtool.backend.model.Mood;
+import ru.cringules.moodtool.backend.model.PredictModel;
 import ru.cringules.moodtool.backend.services.MoodEntryService;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MoodController {
     private final MoodEntryService moodEntryService;
+    private final PredictModel predictModel;
 
     @PostMapping("entries")
     public ResponseEntity<Void> postMoodEntry(@RequestBody @Valid MoodEntryDto moodEntryDto) {
@@ -39,9 +42,10 @@ public class MoodController {
         return ResponseEntity.ok(moodEntryService.getMoodEntries(user));
     }
 
-    @GetMapping("predict")
-    public ResponseEntity<MoodDto> getMoodPrediction(@Valid MoodConditions moodConditions) {
-        // TODO: implement
-        return ResponseEntity.ok(new MoodDto(0, 0, 0, 0));
+    @PostMapping("predict")
+    public ResponseEntity<MoodDto> getMoodPrediction(@RequestBody @Valid MoodConditions moodConditions) {
+        Mood mood = predictModel.PredictMood(moodConditions.getTimestamp(), moodConditions.getTags());
+
+        return ResponseEntity.ok(new MoodDto(mood.angryAfraid(), mood.cheerfulDepressed(), mood.willfulYielding(), mood.pressuredLonely()));
     }
 }

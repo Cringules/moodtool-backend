@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +14,5 @@ import java.util.Set;
 @Validated
 public class MoodConditions {
     private Instant timestamp;
-    private Set<String> tags;
+    private List<String> tags;
 }
